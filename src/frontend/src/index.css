@@ -1,0 +1,155 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Warm earthy South Indian palette */
+    --background: 0.97 0.01 75;
+    --foreground: 0.22 0.03 45;
+
+    --card: 0.99 0.005 75;
+    --card-foreground: 0.22 0.03 45;
+
+    --popover: 0.99 0.005 75;
+    --popover-foreground: 0.22 0.03 45;
+
+    /* Deep terracotta/amber primary */
+    --primary: 0.56 0.14 42;
+    --primary-foreground: 0.98 0.005 75;
+
+    /* Warm cream secondary */
+    --secondary: 0.94 0.025 75;
+    --secondary-foreground: 0.35 0.05 45;
+
+    /* Muted warm tone */
+    --muted: 0.93 0.015 70;
+    --muted-foreground: 0.52 0.04 55;
+
+    /* Forest green accent */
+    --accent: 0.48 0.12 145;
+    --accent-foreground: 0.98 0.005 75;
+
+    --destructive: 0.55 0.22 25;
+    --destructive-foreground: 0.98 0.005 75;
+
+    --border: 0.88 0.025 70;
+    --input: 0.88 0.025 70;
+    --ring: 0.56 0.14 42;
+
+    --radius: 0.5rem;
+
+    /* Chart */
+    --chart-1: 0.56 0.14 42;
+    --chart-2: 0.48 0.12 145;
+    --chart-3: 0.65 0.14 75;
+    --chart-4: 0.72 0.12 55;
+    --chart-5: 0.58 0.09 35;
+
+    /* Sidebar */
+    --sidebar: 0.97 0.01 75;
+    --sidebar-foreground: 0.22 0.03 45;
+    --sidebar-primary: 0.56 0.14 42;
+    --sidebar-primary-foreground: 0.98 0.005 75;
+    --sidebar-accent: 0.94 0.025 75;
+    --sidebar-accent-foreground: 0.35 0.05 45;
+    --sidebar-border: 0.88 0.025 70;
+    --sidebar-ring: 0.56 0.14 42;
+  }
+
+  * {
+    @apply border-border;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "DM Sans", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Playfair Display", serif;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: "Playfair Display", serif;
+  }
+  .font-body {
+    font-family: "DM Sans", sans-serif;
+  }
+  .section-fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .section-fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* WhatsApp pulse animation */
+@keyframes whatsapp-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 oklch(0.48 0.2 145 / 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 12px oklch(0.48 0.2 145 / 0);
+  }
+}
+
+.whatsapp-btn {
+  animation: whatsapp-pulse 2.5s ease-in-out infinite;
+}
+
+/* Nav backdrop blur on scroll — fully opaque so text is always readable */
+.nav-scrolled {
+  background-color: oklch(0.98 0.01 75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 2px 24px oklch(0.22 0.03 45 / 0.14), 0 1px 0 oklch(0.85 0.02 70);
+}
+
+.nav-top {
+  background-color: transparent;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: oklch(0.97 0.01 75);
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(0.56 0.14 42 / 0.4);
+  border-radius: 3px;
+}
+
+/* Gallery hover effect */
+.gallery-item {
+  overflow: hidden;
+}
+.gallery-item img {
+  transition: transform 0.5s ease;
+}
+.gallery-item:hover img {
+  transform: scale(1.07);
+}
+
+/* Menu card hover */
+.menu-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.menu-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px oklch(0.22 0.03 45 / 0.12);
+}
