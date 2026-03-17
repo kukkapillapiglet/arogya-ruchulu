@@ -622,14 +622,7 @@ function CateringBanner() {
 }
 
 function NavBar({ whatsapp }: { whatsapp: string }) {
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   const navLinks = [
     { label: "Home", href: "#home", ocid: "nav.home.link" },
@@ -646,16 +639,22 @@ function NavBar({ whatsapp }: { whatsapp: string }) {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "nav-scrolled" : "nav-top"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      style={{
+        backgroundColor: "oklch(0.98 0.01 75)",
+        boxShadow:
+          "0 2px 16px oklch(0.22 0.03 45 / 0.12), 0 1px 0 oklch(0.85 0.02 70)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        borderBottom: "1px solid oklch(0.88 0.025 70)",
+      }}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <button
           type="button"
           onClick={() => scrollTo("#home")}
           className="font-display text-xl font-bold tracking-tight"
-          style={{ color: scrolled ? "oklch(0.35 0.09 42)" : "white" }}
+          style={{ color: "oklch(0.35 0.09 42)" }}
         >
           Arogya Ruchulu
         </button>
@@ -672,11 +671,7 @@ function NavBar({ whatsapp }: { whatsapp: string }) {
                 scrollTo(link.href);
               }}
               className="font-body text-sm font-medium transition-colors duration-200 hover:text-primary"
-              style={{
-                color: scrolled
-                  ? "oklch(0.35 0.05 45)"
-                  : "oklch(0.97 0.01 75 / 0.92)",
-              }}
+              style={{ color: "oklch(0.35 0.05 45)" }}
             >
               {link.label}
             </a>
@@ -700,7 +695,7 @@ function NavBar({ whatsapp }: { whatsapp: string }) {
           className="md:hidden p-2"
           type="button"
           onClick={() => setMobileOpen(!mobileOpen)}
-          style={{ color: scrolled ? "oklch(0.35 0.09 42)" : "white" }}
+          style={{ color: "oklch(0.35 0.09 42)" }}
         >
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -759,16 +754,29 @@ function HeroSection({ whatsapp }: { whatsapp: string }) {
       id="home"
       className="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage:
-            "url('/assets/generated/hero-food.dim_1600x900.jpg')",
-        }}
-      />
+      {/* Warm gradient background */}
       <div
         className="absolute inset-0"
-        style={{ background: "oklch(0.15 0.04 42 / 0.72)" }}
+        style={{
+          background:
+            "linear-gradient(135deg, oklch(0.38 0.14 42) 0%, oklch(0.28 0.1 30) 100%)",
+        }}
+      />
+
+      {/* Cartoon characters at the bottom */}
+      <img
+        src="/assets/uploads/arogya-google--1.png"
+        alt="Arogya Ruchulu characters"
+        className="absolute bottom-0 left-0 w-full pointer-events-none select-none"
+        style={{
+          height: "58%",
+          objectFit: "contain",
+          objectPosition: "bottom",
+          maskImage:
+            "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 20%, black 45%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 20%, black 45%)",
+        }}
       />
 
       {/* Decorative bottom fade */}
@@ -776,16 +784,16 @@ function HeroSection({ whatsapp }: { whatsapp: string }) {
         className="absolute bottom-0 left-0 right-0 h-32"
         style={{
           background:
-            "linear-gradient(to bottom, transparent, oklch(0.97 0.01 75))",
+            "linear-gradient(to bottom, transparent, oklch(0.28 0.1 30))",
         }}
       />
 
-      <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
+      <div className="relative z-10 text-center px-4 max-w-3xl mx-auto pb-64 sm:pb-72">
         <p
           className="font-body text-sm uppercase tracking-[0.3em] mb-4"
           style={{ color: "oklch(0.82 0.1 75)" }}
         >
-          Hyderabad's finest
+          Gurla's Finest
         </p>
         <h1
           className="font-display text-5xl sm:text-6xl md:text-7xl font-bold leading-tight mb-4"

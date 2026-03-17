@@ -110,7 +110,7 @@
   animation: whatsapp-pulse 2.5s ease-in-out infinite;
 }
 
-/* Nav backdrop blur on scroll — fully opaque so text is always readable */
+/* Nav — always solid background to prevent text overlap */
 .nav-scrolled {
   background-color: oklch(0.98 0.01 75);
   backdrop-filter: blur(20px);
@@ -119,7 +119,8 @@
 }
 
 .nav-top {
-  background-color: transparent;
+  background-color: oklch(0.98 0.01 75);
+  box-shadow: 0 1px 0 oklch(0.88 0.025 70);
 }
 
 /* Custom scrollbar */
