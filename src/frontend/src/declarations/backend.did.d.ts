@@ -10,6 +10,12 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface CustomerOrder {
+  'orderId' : bigint,
+  'totalAmount' : bigint,
+  'timestamp' : Time,
+  'items' : Array<OrderItem>,
+}
 export interface GalleryImage { 'title' : string, 'caption' : string }
 export type MenuCategory = { 'breakfast' : null } |
   { 'lunch' : null } |
@@ -23,6 +29,11 @@ export interface MenuItem {
   'price' : bigint,
   'vegetarian' : boolean,
 }
+export interface OrderItem {
+  'itemName' : string,
+  'quantity' : bigint,
+  'priceEach' : bigint,
+}
 export interface RestaurantInfo {
   'name' : string,
   'whatsapp' : string,
@@ -30,13 +41,24 @@ export interface RestaurantInfo {
   'openingHours' : string,
   'phone' : string,
 }
+export type Time = bigint;
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
 export interface _SERVICE {
+  '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'getAdminOrderCount' : ActorMethod<[], bigint>,
+  'getAdminOrders' : ActorMethod<[], Array<CustomerOrder>>,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getGalleryImages' : ActorMethod<[], Array<GalleryImage>>,
   'getMenuItems' : ActorMethod<[], Array<MenuItem>>,
   'getMenuItemsByCategory' : ActorMethod<[MenuCategory], Array<MenuItem>>,
   'getRestaurantInfo' : ActorMethod<[], RestaurantInfo>,
   'getSortedMenuByCategory' : ActorMethod<[], Array<MenuItem>>,
   'getVegMenuItems' : ActorMethod<[], Array<MenuItem>>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
+  'placeOrder' : ActorMethod<[Array<OrderItem>, bigint], bigint>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

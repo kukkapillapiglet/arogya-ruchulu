@@ -8,6 +8,23 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
+export const Time = IDL.Int;
+export const OrderItem = IDL.Record({
+  'itemName' : IDL.Text,
+  'quantity' : IDL.Nat,
+  'priceEach' : IDL.Nat,
+});
+export const CustomerOrder = IDL.Record({
+  'orderId' : IDL.Nat,
+  'totalAmount' : IDL.Nat,
+  'timestamp' : Time,
+  'items' : IDL.Vec(OrderItem),
+});
 export const GalleryImage = IDL.Record({
   'title' : IDL.Text,
   'caption' : IDL.Text,
@@ -35,6 +52,11 @@ export const RestaurantInfo = IDL.Record({
 });
 
 export const idlService = IDL.Service({
+  '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'getAdminOrderCount' : IDL.Func([], [IDL.Nat], ['query']),
+  'getAdminOrders' : IDL.Func([], [IDL.Vec(CustomerOrder)], ['query']),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getGalleryImages' : IDL.Func([], [IDL.Vec(GalleryImage)], ['query']),
   'getMenuItems' : IDL.Func([], [IDL.Vec(MenuItem)], ['query']),
   'getMenuItemsByCategory' : IDL.Func(
@@ -45,11 +67,30 @@ export const idlService = IDL.Service({
   'getRestaurantInfo' : IDL.Func([], [RestaurantInfo], ['query']),
   'getSortedMenuByCategory' : IDL.Func([], [IDL.Vec(MenuItem)], ['query']),
   'getVegMenuItems' : IDL.Func([], [IDL.Vec(MenuItem)], ['query']),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'placeOrder' : IDL.Func([IDL.Vec(OrderItem), IDL.Nat], [IDL.Nat], []),
 });
 
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
+  const Time = IDL.Int;
+  const OrderItem = IDL.Record({
+    'itemName' : IDL.Text,
+    'quantity' : IDL.Nat,
+    'priceEach' : IDL.Nat,
+  });
+  const CustomerOrder = IDL.Record({
+    'orderId' : IDL.Nat,
+    'totalAmount' : IDL.Nat,
+    'timestamp' : Time,
+    'items' : IDL.Vec(OrderItem),
+  });
   const GalleryImage = IDL.Record({ 'title' : IDL.Text, 'caption' : IDL.Text });
   const MenuCategory = IDL.Variant({
     'breakfast' : IDL.Null,
@@ -74,6 +115,11 @@ export const idlFactory = ({ IDL }) => {
   });
   
   return IDL.Service({
+    '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'getAdminOrderCount' : IDL.Func([], [IDL.Nat], ['query']),
+    'getAdminOrders' : IDL.Func([], [IDL.Vec(CustomerOrder)], ['query']),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getGalleryImages' : IDL.Func([], [IDL.Vec(GalleryImage)], ['query']),
     'getMenuItems' : IDL.Func([], [IDL.Vec(MenuItem)], ['query']),
     'getMenuItemsByCategory' : IDL.Func(
@@ -84,6 +130,8 @@ export const idlFactory = ({ IDL }) => {
     'getRestaurantInfo' : IDL.Func([], [RestaurantInfo], ['query']),
     'getSortedMenuByCategory' : IDL.Func([], [IDL.Vec(MenuItem)], ['query']),
     'getVegMenuItems' : IDL.Func([], [IDL.Vec(MenuItem)], ['query']),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'placeOrder' : IDL.Func([IDL.Vec(OrderItem), IDL.Nat], [IDL.Nat], []),
   });
 };
 

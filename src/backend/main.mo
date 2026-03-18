@@ -1,6 +1,13 @@
-import Array "mo:core/Array";
-import Text "mo:core/Text";
+import Map "mo:core/Map";
+import List "mo:core/List";
+import Time "mo:core/Time";
+import Nat "mo:core/Nat";
 import Order "mo:core/Order";
+import Iter "mo:core/Iter";
+import Runtime "mo:core/Runtime";
+import Array "mo:core/Array";
+import MixinAuthorization "authorization/MixinAuthorization";
+import AccessControl "authorization/access-control";
 
 actor {
   type MenuCategory = {
@@ -60,6 +67,19 @@ actor {
     caption : Text;
   };
 
+  type OrderItem = {
+    itemName : Text;
+    quantity : Nat;
+    priceEach : Nat;
+  };
+
+  type CustomerOrder = {
+    orderId : Nat;
+    items : [OrderItem];
+    totalAmount : Nat;
+    timestamp : Time.Time;
+  };
+
   let restaurantInfo : RestaurantInfo = {
     name = "Arogya Ruchulu";
     address = "123 South Avenue, Hyderabad, Telangana, India";
@@ -106,7 +126,7 @@ actor {
     },
     {
       name = "Vegetable Biryani";
-      description = "Aromatic rice with mixed veggies and South Indian spices";
+      description = "Aromatic rice with mixed veggies and south Indian spices";
       price = 150;
       category = #dinner;
       vegetarian = true;
@@ -141,6 +161,14 @@ actor {
     { title = "Ragi Mudde Showcase"; caption = "Healthy finger millet balls" },
   ];
 
+  // New Order Management
+  let orders = Map.empty<Nat, CustomerOrder>();
+  var orderCounter = 0;
+
+  // Prefab user mgmt state
+  let accessControlState = AccessControl.initState();
+  include MixinAuthorization(accessControlState);
+
   public query ({ caller }) func getRestaurantInfo() : async RestaurantInfo {
     restaurantInfo;
   };
@@ -171,5 +199,34 @@ actor {
 
   public query ({ caller }) func getGalleryImages() : async [GalleryImage] {
     galleryImages;
+  };
+
+  public shared ({ caller }) func placeOrder(items : [OrderItem], totalAmount : Nat) : async Nat {
+    let orderId = orderCounter + 1;
+    orderCounter += 1;
+
+    let newOrder : CustomerOrder = {
+      orderId;
+      items;
+      totalAmount;
+      timestamp = Time.now();
+    };
+
+    orders.add(orderId, newOrder);
+    orderId;
+  };
+
+  public query ({ caller }) func getAdminOrders() : async [CustomerOrder] {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can view orders");
+    };
+    orders.values().toArray();
+  };
+
+  public query ({ caller }) func getAdminOrderCount() : async Nat {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can view order count");
+    };
+    orders.size();
   };
 };

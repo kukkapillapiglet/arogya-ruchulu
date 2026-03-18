@@ -1,5 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import type { GalleryImage, MenuItem, RestaurantInfo } from "../backend.d";
+import type {
+  CustomerOrder,
+  GalleryImage,
+  MenuItem,
+  RestaurantInfo,
+} from "../backend.d";
 import { useActor } from "./useActor";
 
 export function useRestaurantInfo() {
@@ -43,5 +48,30 @@ export function useGalleryImages() {
       return actor.getGalleryImages();
     },
     enabled: !!actor && !isFetching,
+  });
+}
+
+export function useIsAdmin(enabled = false) {
+  const { actor, isFetching } = useActor();
+  return useQuery<boolean>({
+    queryKey: ["isAdmin"],
+    queryFn: async () => {
+      if (!actor) return false;
+      return actor.isCallerAdmin();
+    },
+    enabled: enabled && !!actor && !isFetching,
+    retry: false,
+  });
+}
+
+export function useAdminOrders(enabled = false) {
+  const { actor, isFetching } = useActor();
+  return useQuery<CustomerOrder[]>({
+    queryKey: ["adminOrders"],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAdminOrders();
+    },
+    enabled: enabled && !!actor && !isFetching,
   });
 }
